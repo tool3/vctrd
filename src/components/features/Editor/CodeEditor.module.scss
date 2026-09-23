@@ -1,0 +1,187 @@
+.host {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  :global {
+    .cm-editor {
+      flex: 1;
+      min-height: 0;
+      height: 100%;
+      background: transparent;
+      color: var(--color-text-primary);
+      font-size: 16px;
+
+      @include breakpoint('lg') {
+        font-size: var(--font-size-sm);
+      }
+
+      &.cm-focused {
+        outline: none;
+      }
+    }
+
+    .cm-scroller {
+      @include custom-scrollbar;
+      font-family: var(--font-family-mono);
+      line-height: 1.6;
+      overscroll-behavior: contain;
+    }
+
+    .cm-content {
+      padding: var(--space-md) 0;
+      caret-color: var(--color-text-primary);
+    }
+
+    .cm-line {
+      padding: 0 var(--space-md);
+    }
+
+    .cm-gutters {
+      background-color: var(--color-bg-tertiary);
+      border-right: 1px solid var(--color-border-primary);
+      color: var(--color-text-tertiary);
+      user-select: none;
+    }
+
+    .cm-lineNumbers .cm-gutterElement {
+      min-width: 40px;
+      padding: 0 var(--space-sm) 0 var(--space-md);
+    }
+
+    .cm-foldGutter .cm-gutterElement {
+      padding: 0 4px;
+      color: var(--color-text-tertiary);
+      cursor: pointer;
+    }
+
+    .cm-activeLine {
+      background-color: rgba(231, 229, 228, 0.025);
+    }
+
+    .cm-activeLineGutter {
+      background-color: rgba(231, 229, 228, 0.04);
+      color: var(--color-text-secondary);
+    }
+
+    .cm-cursor,
+    .cm-dropCursor {
+      border-left-color: var(--color-text-primary);
+    }
+
+    .cm-selectionBackground,
+    .cm-editor.cm-focused .cm-selectionBackground,
+    .cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+      background: rgba(198, 198, 200, 0.18);
+    }
+
+    .cm-selectionMatch {
+      background: rgba(198, 198, 200, 0.1);
+    }
+
+    .cm-matchingBracket {
+      background: rgba(198, 198, 200, 0.14);
+      outline: 1px solid rgba(198, 198, 200, 0.25);
+    }
+
+    .cm-placeholder {
+      color: var(--color-text-tertiary);
+    }
+
+    .cm-foldPlaceholder {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border-secondary);
+      color: var(--color-text-secondary);
+      padding: 0 6px;
+      border-radius: var(--radius-sm);
+    }
+
+    .cm-panels {
+      background: var(--color-bg-elevated);
+      color: var(--color-text-primary);
+      border-color: var(--color-border-primary);
+    }
+
+    .cm-panel.cm-search {
+      padding: var(--space-sm);
+      font-family: var(--font-family-sans);
+      font-size: var(--font-size-xs);
+
+      input,
+      button {
+        font-size: var(--font-size-xs);
+      }
+
+      input[type='text'],
+      .cm-textfield {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border-secondary);
+        border-radius: var(--radius-sm);
+        color: var(--color-text-primary);
+        padding: 2px 6px;
+      }
+
+      .cm-button {
+        background: var(--color-bg-tertiary);
+        background-image: none;
+        border: 1px solid var(--color-border-secondary);
+        border-radius: var(--radius-sm);
+        color: var(--color-text-primary);
+      }
+    }
+
+    .cm-tooltip {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border-secondary);
+      border-radius: var(--radius-md);
+      color: var(--color-text-primary);
+      overflow: hidden;
+    }
+
+    .cm-tooltip-autocomplete > ul > li[aria-selected] {
+      background: var(--color-bg-bright);
+      color: var(--color-text-primary);
+    }
+
+    .cm-searchMatch {
+      background: rgba(255, 166, 87, 0.2);
+      outline: 1px solid rgba(255, 166, 87, 0.4);
+    }
+
+    .tok-typeName {
+      color: #f97583;
+    }
+
+    .tok-propertyName {
+      color: #a5d6ff;
+    }
+
+    .tok-string {
+      color: #ff7b72;
+    }
+
+    .tok-string2 {
+      color: #ffa657;
+    }
+
+    .tok-punctuation {
+      color: var(--color-text-secondary);
+    }
+
+    .tok-comment {
+      color: var(--color-text-tertiary);
+      font-style: italic;
+    }
+
+    .tok-meta {
+      color: #d2a8ff;
+    }
+
+    .tok-invalid {
+      color: var(--color-error);
+      text-decoration: underline wavy;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 var(--space-lg);
+  padding-top: env(safe-area-inset-top, 0);
+  flex-shrink: 0;
+
+  @include breakpoint-down('lg') {
+    height: 52px;
+    padding: 0 var(--space-md);
+  }
+}
+
+.title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+
+  a {
+    display: flex;
+    align-items: center;
+    color: var(--color-text-tertiary);
+    transition: color 150ms ease;
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+  }
+}

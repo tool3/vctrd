@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="face" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#30C5D2"/>
+      <stop offset="1" stop-color="#471069"/>
+    </linearGradient>
+    <pattern id="lines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="1.4" fill="#000" opacity="0.3"/>
+    </pattern>
+    <radialGradient id="glass" cx="0.5" cy="0.45" r="0.7">
+      <stop offset="0.55" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.45"/>
+    </radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0e0e0e"/>
+  <rect x="4" y="4" width="56" height="56" rx="11" fill="url(#face)"/>
+  <g fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 21 L32 45 L46 21" stroke="#ff2d55" opacity="0.85" transform="translate(-1.8 0)"/>
+    <path d="M18 21 L32 45 L46 21" stroke="#4cc9f0" opacity="0.85" transform="translate(1.8 0)"/>
+    <path d="M18 21 L32 45 L46 21" stroke="#f7f7f2"/>
+  </g>
+  <rect x="4" y="4" width="56" height="56" rx="11" fill="url(#lines)"/>
+  <rect x="4" y="4" width="56" height="56" rx="11" fill="url(#glass)"/>
+</svg>
