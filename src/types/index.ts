@@ -62,7 +62,15 @@ export interface ShadowConfig {
   color: string;
 }
 
+export interface ContentBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 export interface ArtworkConfig {
+  trim: boolean;
   scale: number;
   radius: number;
   shadow: ShadowConfig;
@@ -103,6 +111,7 @@ export interface RenderRequest {
   background: BackgroundConfig;
   padding: PaddingTuple;
   artwork: ArtworkConfig;
+  crop: ContentBox | null;
 }
 
 export interface RenderOutput {

@@ -112,10 +112,48 @@
 }
 
 .value {
+  display: inline-flex;
+  align-items: baseline;
   flex-shrink: 0;
-  min-width: 24px;
+  padding: 3px 6px;
   font-size: var(--font-size-xs);
   font-family: var(--font-family-mono);
   color: var(--color-text-secondary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: text;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-border-secondary);
+  }
+
+  &:focus-within {
+    border-color: var(--color-brand-primary);
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+  }
+}
+
+.valueInput {
+  width: auto;
+  min-width: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
   text-align: right;
+  background: transparent;
+  border: none;
+  outline: none;
+
+  @include breakpoint-down('lg') {
+    font-size: 16px;
+  }
+}
+
+.suffix {
+  margin-left: 1px;
+  color: var(--color-text-tertiary);
 }

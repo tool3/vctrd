@@ -178,15 +178,28 @@ export interface ComposeOptions {
   padding: PaddingTuple;
   artwork: ArtworkConfig;
   overflow: boolean;
+  silhouette: SvgElement | null;
 }
 
-export const composeCanvas = (root: SvgElement, { background, padding, artwork, overflow }: ComposeOptions): SvgElement => {
+const WHITE_WITH_ALPHA = '0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0';
+
+const silhouetteMask = (id: string, silhouette: SvgElement, box: { x: number; y: number; width: number; height: number }): SvgElement[] => [
+  element('filter', { id: `${id}-alpha`, filterUnits: 'userSpaceOnUse', ...box, 'color-interpolation-filters': 'sRGB' }, [
+    element('feColorMatrix', { type: 'matrix', values: WHITE_WITH_ALPHA }),
+  ]),
+  element('mask', { id, maskUnits: 'userSpaceOnUse', ...box }, [
+    element('g', { filter: url(`${id}-alpha`) }, [withAttributes(silhouette, box)]),
+  ]),
+];
+
+export const composeCanvas = (root: SvgElement, { background, padding, artwork, overflow, silhouette }: ComposeOptions): SvgElement => {
   const layout = layoutCanvas(sizeOf(root), padding, background.aspectRatio);
   const canvasBox = { x: 0, y: 0, width: layout.width, height: layout.height };
   const artworkBox = { x: layout.x, y: layout.y, ...layout.artwork };
   const canvasClipId = `${PREFIX}-canvas-clip`;
   const artworkClipId = `${PREFIX}-artwork-clip`;
   const shadowId = `${PREFIX}-shadow`;
+  const maskId = `${PREFIX}-artwork-mask`;
   const pattern = background.type === 'pattern' ? patternLayer(background) : null;
   const clipToCanvas = { 'clip-path': url(canvasClipId) };
   const backdrop = roundedRect(canvasBox, background.radius);
@@ -199,6 +212,7 @@ export const composeCanvas = (root: SvgElement, { background, padding, artwork, 
     ...paint.defs,
     ...(pattern?.defs ?? []),
     ...(artwork.shadow.enabled ? [shadowFilter(shadowId, artwork, layout)] : []),
+    ...(silhouette ? silhouetteMask(maskId, silhouette, artworkBox) : []),
     ...(artwork.radius > 0 ? [element('clipPath', { id: artworkClipId }, [element('rect', roundedRect(artworkBox, artwork.radius))])] : []),
   ]);
 
@@ -233,7 +247,10 @@ export const composeCanvas = (root: SvgElement, { background, padding, artwork, 
     ...artworkBox,
     overflow: overflow ? 'visible' : undefined,
   });
-  const clipped = artwork.radius > 0 ? element('g', { 'clip-path': url(artworkClipId) }, [nested]) : nested;
+  const contained = silhouette
+    ? element('g', { mask: url(maskId), style: 'isolation:isolate' }, [nested])
+    : element('g', { style: 'isolation:isolate' }, [nested]);
+  const clipped = artwork.radius > 0 ? element('g', { 'clip-path': url(artworkClipId) }, [contained]) : contained;
   const shadowed = artwork.shadow.enabled ? element('g', { filter: url(shadowId) }, [clipped]) : clipped;
 
   return element(

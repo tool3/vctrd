@@ -1,5 +1,6 @@
 import { parse, serialize, withAttributes } from 'vctrfx';
 import type { SvgDocument, SvgElement } from 'vctrfx';
+import type { ContentBox } from '@/types';
 
 export const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 export const XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink';
@@ -48,16 +49,20 @@ const deriveSize = (width: number | null, height: number | null, viewBox: Box | 
 
 const formatBox = (box: Box): string => [box.x, box.y, box.width, box.height].map(round).join(' ');
 
-export const normalizeArtwork = (root: SvgElement, scale: number, source: string): SvgElement => {
+export const normalizeArtwork = (root: SvgElement, scale: number, source: string, crop: ContentBox | null): SvgElement => {
   const viewBox = parseViewBox(root.attributes.viewBox);
-  const size = deriveSize(parseLength(root.attributes.width), parseLength(root.attributes.height), viewBox);
-  if (size === null) throw new Error('The SVG needs a viewBox, or a width and a height, to know how big it is.');
-  const box = viewBox ?? { x: 0, y: 0, ...size };
+  const natural = deriveSize(parseLength(root.attributes.width), parseLength(root.attributes.height), viewBox);
+  if (natural === null) throw new Error('The SVG needs a viewBox, or a width and a height, to know how big it is.');
+  const full = viewBox ?? { x: 0, y: 0, ...natural };
+  const box = crop ?? full;
+  const unit = natural.width / full.width;
+  const size = crop ? { width: crop.width * unit, height: crop.height * natural.height / full.height } : natural;
   const needsXlink = root.attributes['xmlns:xlink'] === undefined && source.includes('xlink:');
   return withAttributes(root, {
     xmlns: root.attributes.xmlns ?? SVG_NAMESPACE,
     'xmlns:xlink': needsXlink ? XLINK_NAMESPACE : undefined,
     viewBox: formatBox(box),
+    preserveAspectRatio: crop ? 'none' : undefined,
     width: round(size.width * scale),
     height: round(size.height * scale),
   });

@@ -19,6 +19,7 @@ import type {
   ExportSettings,
   PaddingTuple,
   PipelineSettings,
+  ContentBox,
   RenderRequest,
   ShadowConfig,
 } from '@/types';
@@ -43,6 +44,7 @@ export interface AppearanceState {
 }
 
 export interface UiState {
+  measured: { source: string; box: ContentBox | null } | null;
   compareMode: boolean;
   comparePosition: number;
 }
@@ -58,6 +60,7 @@ export interface Actions {
   setExportSettings: (patch: Partial<ExportSettings>) => void;
   applyPreset: (id: string) => void;
   setAccent: (accent: string) => void;
+  setMeasured: (measured: { source: string; box: ContentBox | null }) => void;
   setCompareMode: (enabled: boolean) => void;
   setComparePosition: (position: number) => void;
   resetSettings: () => void;
@@ -143,6 +146,7 @@ export const useStore = create<AppStore>()(
       ...DEFAULT_SETTINGS,
       effects: initialEffects(),
       accent: DEFAULT_ACCENT,
+      measured: null,
       compareMode: false,
       comparePosition: 50,
 
@@ -156,6 +160,7 @@ export const useStore = create<AppStore>()(
       setExportSettings: (patch) => set((state) => ({ exportSettings: { ...state.exportSettings, ...patch } })),
       applyPreset: (id) => set((state) => presetState(id, state)),
       setAccent: (accent) => set({ accent }),
+      setMeasured: (measured) => set({ measured }),
       setCompareMode: (compareMode) => set({ compareMode }),
       setComparePosition: (comparePosition) => set({ comparePosition }),
       resetSettings: () => set({ ...DEFAULT_SETTINGS }),
@@ -197,26 +202,19 @@ export const useStore = create<AppStore>()(
   ),
 );
 
-export const useRenderRequest = (): RenderRequest =>
-  useStore(
-    useShallow((state) => ({
-      source: state.source,
-      effects: state.effects,
-      pipeline: state.pipeline,
-      background: state.background,
-      padding: state.padding,
-      artwork: state.artwork,
-    })),
-  );
+const cropFor = (state: AppStore): ContentBox | null =>
+  state.artwork.trim && state.measured?.source === state.source ? state.measured.box : null;
 
-export const readRenderRequest = (): RenderRequest => {
-  const state = useStore.getState();
-  return {
-    source: state.source,
-    effects: state.effects,
-    pipeline: state.pipeline,
-    background: state.background,
-    padding: state.padding,
-    artwork: state.artwork,
-  };
-};
+const requestOf = (state: AppStore): RenderRequest => ({
+  source: state.source,
+  effects: state.effects,
+  pipeline: state.pipeline,
+  background: state.background,
+  padding: state.padding,
+  artwork: state.artwork,
+  crop: cropFor(state),
+});
+
+export const useRenderRequest = (): RenderRequest => useStore(useShallow(requestOf));
+
+export const readRenderRequest = (): RenderRequest => requestOf(useStore.getState());

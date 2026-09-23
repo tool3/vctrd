@@ -3,12 +3,14 @@ import { Editor } from '@/components/features/Editor/Editor';
 import { Preview } from '@/components/features/Preview/Preview';
 import { Header } from '@/components/layout/Header/Header';
 import { Toolbar } from '@/components/layout/Toolbar/Toolbar';
+import { useContentBox } from '@/hooks/useContentBox';
 import { useRender } from '@/hooks/useRender';
 import { firstSvgFile, hasFiles, readSvgFile } from '@/lib/files';
 import { useStore } from '@/store';
 import styles from './App.module.scss';
 
 export function App() {
+  useContentBox();
   const render = useRender();
   const setSource = useStore((s) => s.setSource);
   const [dragging, setDragging] = useState(false);

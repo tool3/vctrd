@@ -19,6 +19,7 @@ export const DEFAULT_BACKGROUND: BackgroundConfig = {
 };
 
 export const DEFAULT_ARTWORK: ArtworkConfig = {
+  trim: true,
   scale: 2,
   radius: 0,
   shadow: {
